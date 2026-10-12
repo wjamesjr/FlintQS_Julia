@@ -4,14 +4,13 @@ const F = FlintQS
 
 function randomprime(rng, digits::Integer)::BigInt
     if digits <= 0
-        error("randomdigits(digits), digits must be > 0")
+        error("randomprime(digits), digits must be > 0")
     end
     local myprime
+    lower = BigInt(10) ^ (digits - 1)
+    upper = (BigInt(10) ^ digits) - 1
     while true
-        lower = BigInt(10) ^ (digits - 1)
-        upper = (BigInt(10) ^ digits) - 1
-        n = rand(rng, lower:upper)
-        myprime = F.next_prime(n)
+        myprime = F.next_prime(rand(rng, lower:upper))
         if myprime <= upper
             break
         end
@@ -54,7 +53,7 @@ end
     # Review Focus 3: many small factors times a large prime
     @test F.flintqs(big"2"^5 * big"3"^3 * P; rng = rng) == vcat(fill(BigInt(2), 5), fill(BigInt(3), 3), [P])
     # Review Focus 4: 29-digit (lift path) and 30-digit (direct) semiprimes
-    for (d1, d2) in ((14, 15), (15, 15))
+    for (d1, d2) in ((14, 15), (15, 15), (15, 16))
         n, p, q = semiprime(rng, d1, d2)
         @test F.flintqs(n; rng = rng) == sort([p, q])
     end
