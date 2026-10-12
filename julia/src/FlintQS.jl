@@ -6,11 +6,11 @@ Julia port of William Hart's FlintQS: a self-initializing quadratic sieve with s
 large-prime merging and Block Lanczos linear algebra.
 
 Exports [`flintqs`](@ref) (full prime factorization) and [`siqs_split`](@ref) (one divisor
-of a ≥ 40-digit composite).
+of a ≥ 30-digit composite).
 """
 module FlintQS
-
 using Random
+
 include("util.jl")
 include("modarith.jl")
 include("params.jl")
@@ -85,14 +85,11 @@ end
     siqs_split(n; rng, verbose, accept) -> BigInt
 
 Return a nontrivial divisor of the composite `n` using the self-initializing quadratic sieve.
-`n` must have at least 40 decimal digits, no prime factor below 1000 and not be a perfect power.
+`n` must have at least 30 decimal digits, no prime factor below 1000 and not be a perfect power.
 `accept(d)` filters which divisors may be returned (default: any); the search continues through
 the remaining dependencies, and further sieving, until one is accepted.
 """
 function siqs_split(n::BigInt; rng = Random.default_rng(), verbose::Bool = false, accept = _ -> true)
-    if verbose
-
-    end
     verbose && println("Choosing Parameters...")
     P = params_for(ndigits(n))
     verbose && println("Choosing Multiplier...")
@@ -128,7 +125,7 @@ function split_composite(m::BigInt; rng, verbose::Bool = false)
         return siqs_split(m; rng = rng, verbose = verbose)
     end
     # 19–29 digits: multiply by a prime (≥ 4 digits, so no factor < 1000) so the work number has
-    # ≥ 31 digits. Only divisors that split `m` are accepted, so the lift prime itself is skipped
+    # ≥ 30 digits. Only divisors that split `m` are accepted, so the lift prime itself is skipped
     # without discarding the sieve run.
     pdig = max(31 - d, 4)
     P = next_prime(BigInt(10)^(pdig - 1) + rand(rng, 1:10^min(pdig - 2, 15)))
@@ -139,7 +136,7 @@ end
 """
     flintqs(n; rng, verbose) -> Vector{BigInt}
 
-Prime factorization of `n > 1` as a sorted vector with multiplicity (`[]` for `n == 1`).
+Prime factorization of `n > 0` as a sorted vector with multiplicity (`[]` for `n == 1`).
 Strips factors below 1000, reduces perfect powers, and splits the rest with Pollard rho
 (≤ 18 digits) or the self-initializing quadratic sieve.
 """
@@ -172,7 +169,6 @@ function flintqs(n::Integer; rng = Random.default_rng(), verbose::Bool = false)
     end
     return sort!(out)
 end
-
 end # module
 
 
