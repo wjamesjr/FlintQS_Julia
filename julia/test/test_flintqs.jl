@@ -23,7 +23,6 @@ function semiprime(rng, d1, d2)
     p == q ? semiprime(rng, d1, d2) : (p * q, p, q)
 end
 
-
 @testset "siqs_split" begin
     rng = Xoshiro(2024)
     for (d1, d2) in ((20, 21), (25, 26))        # 41- and 51-digit semiprimes
