@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
+const SMALL_PRIMES = primes_upto(1000)
 
 "Primes <= `limit` (sieve of Eratosthenes)."
 function primes_upto(limit::Integer)
@@ -13,8 +14,6 @@ function primes_upto(limit::Integer)
     end
     return findall(isp)
 end
-
-const SMALL_PRIMES = primes_upto(1000)
 
 "Miller-Rabin with the first 24 primes as bases (deterministic below 3.3e24, probabilistic above)."
 function is_probable_prime(n::BigInt)
@@ -118,4 +117,3 @@ function pollard_rho(n::BigInt; maxiter::Int = 5_000_000, rng = Random.default_r
     end
     return nothing
 end
-
