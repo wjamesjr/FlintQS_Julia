@@ -10,7 +10,6 @@ of a ≥ 30-digit composite).
 """
 module FlintQS
 using Random
-
 include("util.jl")
 include("modarith.jl")
 include("params.jl")
@@ -19,7 +18,6 @@ include("polynomials.jl")
 include("sieve.jl")
 include("relations.jl")
 include("lanczos.jl")
-
 export flintqs, siqs_split
 
 "Sieve with fresh A values until the store holds at least `target` relations."
@@ -170,7 +168,5 @@ function flintqs(n::Integer; rng = Random.default_rng(), verbose::Bool = false)
     return sort!(out)
 end
 end # module
-
-
 
 
